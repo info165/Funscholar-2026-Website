@@ -43,6 +43,10 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
+// Inlined at build time, so it must be set in the host's build environment —
+// not just at runtime — or the form ships without it.
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** All four fields are required; email additionally has to look like one. */
@@ -116,16 +120,34 @@ export default function ContactPage() {
     setStatus("sending");
     setError("");
 
+    if (!ACCESS_KEY) {
+      console.error("[contact] NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set");
+      setError("The form isn't configured yet. Please email us directly.");
+      setStatus("error");
+      return;
+    }
+
     try {
-      const res = await fetch("/api/contact", {
+      // Posted straight from the browser. Web3Forms access keys are public by
+      // design — they identify the destination inbox, they don't authorise
+      // anything — which is what lets this site build as a static export with
+      // no server of its own.
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          ...data,
+          access_key: ACCESS_KEY,
+          subject: `New enquiry from ${data.name}${
+            data.organization ? ` — ${data.organization}` : ""
+          }`,
+          from_name: "Funscholar Website",
+        }),
       });
       const json = await res.json();
 
-      if (!res.ok || !json.ok) {
-        setError(json.error ?? "Something went wrong. Please try again.");
+      if (!res.ok || !json.success) {
+        setError(json.message ?? "Something went wrong. Please try again.");
         setStatus("error");
         return;
       }
@@ -218,15 +240,16 @@ export default function ContactPage() {
                 {/* noValidate: the browser's native bubbles are off-brand, so
                     validation is handled inline instead. */}
                 <form className="relative space-y-5" onSubmit={handleSubmit} noValidate>
-                  {/* Honeypot. Off-screen rather than display:none, since some
-                      bots skip hidden inputs but not positioned ones. Never
-                      shown, never focusable, never announced. */}
+                  {/* Honeypot. "botcheck" is the field name Web3Forms rejects
+                      on their side, so a filled one never reaches the inbox.
+                      Positioned off-screen rather than display:none, since some
+                      bots skip hidden inputs but not positioned ones. */}
                   <div className="absolute -left-[9999px] top-0 w-px h-px overflow-hidden" aria-hidden="true">
-                    <label htmlFor="website">Website</label>
+                    <label htmlFor="botcheck">Leave this empty</label>
                     <input
-                      id="website"
-                      name="website"
-                      type="text"
+                      id="botcheck"
+                      name="botcheck"
+                      type="checkbox"
                       tabIndex={-1}
                       autoComplete="off"
                     />
