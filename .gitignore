@@ -29,3 +29,6 @@ yarn-error.log*
 
 # static export output
 /out
+
+# wrangler local dev state
+/.wrangler
