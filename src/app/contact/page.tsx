@@ -218,6 +218,20 @@ export default function ContactPage() {
                 {/* noValidate: the browser's native bubbles are off-brand, so
                     validation is handled inline instead. */}
                 <form className="relative space-y-5" onSubmit={handleSubmit} noValidate>
+                  {/* Honeypot. Off-screen rather than display:none, since some
+                      bots skip hidden inputs but not positioned ones. Never
+                      shown, never focusable, never announced. */}
+                  <div className="absolute -left-[9999px] top-0 w-px h-px overflow-hidden" aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      id="website"
+                      name="website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label htmlFor="name" className={labelClass}>
