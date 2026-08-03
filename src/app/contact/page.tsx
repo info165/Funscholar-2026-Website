@@ -125,10 +125,24 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      const json = await res.json();
 
-      if (!res.ok || !json.ok) {
-        setError(json.error ?? "Something went wrong. Please try again.");
+      // Parsed separately from the fetch: a non-JSON body means the endpoint
+      // isn't there at all, which is a different problem from the request
+      // failing, and blaming the visitor's connection for it sends them chasing
+      // the wrong thing. Happens under `next dev`, where Pages Functions don't
+      // run — use `npm run preview` to exercise this path locally.
+      let json: { ok?: boolean; error?: string } | null = null;
+      try {
+        json = await res.json();
+      } catch {
+        console.error(`[contact] non-JSON response from /api/contact (${res.status})`);
+        setError("The form isn't available right now. Please email us directly.");
+        setStatus("error");
+        return;
+      }
+
+      if (!res.ok || !json?.ok) {
+        setError(json?.error ?? "Something went wrong. Please try again.");
         setStatus("error");
         return;
       }
