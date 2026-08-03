@@ -1,0 +1,13 @@
+# Copy to .dev.vars for local testing with `npm run preview`.
+# wrangler reads THIS file for Pages Functions — not .env.local.
+# .dev.vars is gitignored because it holds a real API key.
+
+RESEND_API_KEY=re_your_key_here
+
+# Until funscholar.com is verified in Resend, this MUST be the email address
+# your Resend account is registered with. The fallback sender cannot deliver
+# anywhere else.
+CONTACT_TO_EMAIL=you@example.com
+
+# Leave commented until the domain is verified in Resend.
+# CONTACT_FROM_EMAIL=Funscholar Website <info@funscholar.com>

@@ -32,3 +32,6 @@ yarn-error.log*
 
 # wrangler local dev state
 /.wrangler
+
+# wrangler local secrets — holds a real Resend API key
+.dev.vars
