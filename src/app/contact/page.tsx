@@ -43,10 +43,6 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-// Inlined at build time, so it must be set in the host's build environment —
-// not just at runtime — or the form ships without it.
-const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** All four fields are required; email additionally has to look like one. */
@@ -120,34 +116,19 @@ export default function ContactPage() {
     setStatus("sending");
     setError("");
 
-    if (!ACCESS_KEY) {
-      console.error("[contact] NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set");
-      setError("The form isn't configured yet. Please email us directly.");
-      setStatus("error");
-      return;
-    }
-
     try {
-      // Posted straight from the browser. Web3Forms access keys are public by
-      // design — they identify the destination inbox, they don't authorise
-      // anything — which is what lets this site build as a static export with
-      // no server of its own.
-      const res = await fetch("https://api.web3forms.com/submit", {
+      // Handled by functions/api/contact.ts, a Cloudflare Pages Function. The
+      // pages around it are static files; only this endpoint runs code, because
+      // the Resend key must never reach the browser.
+      const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          ...data,
-          access_key: ACCESS_KEY,
-          subject: `New enquiry from ${data.name}${
-            data.organization ? ` — ${data.organization}` : ""
-          }`,
-          from_name: "Funscholar Website",
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
       const json = await res.json();
 
-      if (!res.ok || !json.success) {
-        setError(json.message ?? "Something went wrong. Please try again.");
+      if (!res.ok || !json.ok) {
+        setError(json.error ?? "Something went wrong. Please try again.");
         setStatus("error");
         return;
       }
