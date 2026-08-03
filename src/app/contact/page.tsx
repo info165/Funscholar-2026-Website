@@ -6,7 +6,7 @@ import { Mail, Phone, MapPin, Send, Loader2, CheckCircle2, AlertCircle } from "l
 
 const details = [
   { icon: Mail, label: "Email", value: "info@funscholar.com" },
-  { icon: Phone, label: "Phone", value: "+91 98765 43210" },
+  { icon: Phone, label: "Phone", value: "+91-9589587054" },
   { icon: MapPin, label: "Headquarters", value: "Kolkata, India" },
 ];
 

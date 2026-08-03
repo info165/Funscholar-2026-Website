@@ -225,7 +225,7 @@ export default function Footer() {
               <div className="flex flex-col gap-3">
                 {[
                   { icon: Mail, value: "info@funscholar.com", href: "mailto:info@funscholar.com" },
-                  { icon: Phone, value: "+91 98765 43210", href: "tel:+919876543210" },
+                  { icon: Phone, value: "+91-9589587054", href: "tel:+919589587054" },
                   // Address isn't actionable, so it renders as plain text.
                   { icon: MapPin, value: "Kolkata, India", href: undefined },
                 ].map((c) => {
