@@ -98,8 +98,9 @@ export default function AboutPage() {
               icon: Eye,
               label: "Our Vision",
               body: (
-                <p className="font-display text-xl lg:text-[1.4rem] font-semibold leading-snug text-[#e11d48]">
-                  TO BE INSERTED
+                <p className="font-display text-xl lg:text-[1.4rem] font-semibold leading-snug text-[#0a0a0a]">
+                  To make every Indian classroom a place where technology is
+                  built, not just taught.
                 </p>
               ),
             },
@@ -107,8 +108,10 @@ export default function AboutPage() {
               icon: Flag,
               label: "Our Mission",
               body: (
-                <p className="font-display text-xl lg:text-[1.4rem] font-semibold leading-snug text-[#e11d48]">
-                  TO BE INSERTED
+                <p className="font-display text-xl lg:text-[1.4rem] font-semibold leading-snug text-[#0a0a0a]">
+                  To bring AI and robotics within reach of every school, through
+                  immersive labs, empowered teachers, and a curriculum built for
+                  genuine understanding.
                 </p>
               ),
             },
