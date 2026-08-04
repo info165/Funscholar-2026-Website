@@ -94,10 +94,15 @@ function Card({ solution, index }: { solution: (typeof solutions)[number]; index
         <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-b from-white to-[#edeef0] border border-black/[0.07] shadow-[0_14px_26px_-14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.95)] flex items-center justify-center mb-5">
           <Icon className={`w-[1.35rem] h-[1.35rem] ${solution.checkColor}`} strokeWidth={1.5} />
         </div>
-        <h3 className="font-display text-xl sm:text-2xl lg:text-[1.7rem] font-bold text-[#0a0a0a] leading-tight">
-          {solution.title[0]}
-          <br />
-          {solution.title[1]}
+        {/* Always reserves two lines. The content block is vertically centred,
+            so a one-line title would otherwise make the whole card's contents
+            shorter and pull its icon out of line with the others. */}
+        <h3 className="font-display text-xl sm:text-2xl lg:text-[1.7rem] font-bold text-[#0a0a0a] leading-tight min-h-[2.5em]">
+          {solution.title.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
         </h3>
         <div className={`w-10 h-1 rounded-full ${solution.barBg} my-4`} />
         <ul className="space-y-2.5">
