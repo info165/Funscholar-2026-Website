@@ -22,7 +22,7 @@ const solutions = [
   },
   {
     icon: Bot,
-    title: ["ATL +", "Robotics Labs"],
+    title: ["Robotics Labs"],
     bullets: ["Cretile kits & 3D printing", "AI-ML Lab setup", "Compliance-ready infrastructure"],
     image: "/images/atl-robotics-kit.png",
     type: "photo" as const,

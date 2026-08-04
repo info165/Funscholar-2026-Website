@@ -24,7 +24,7 @@ const quickLinks = [
 // Every entry links to #solutions — keep in step with SchoolSolutions.tsx.
 const solutions = [
   "Experiential Learning Kits",
-  "ATL + Robotics Labs",
+  "Robotics Labs",
   "Smart Classroom Solutions",
   "Robotics Training Program",
 ];
