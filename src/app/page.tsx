@@ -1,7 +1,10 @@
 import Hero from "@/components/Hero";
 import SchoolSolutions from "@/components/SchoolSolutions";
 import TrustedPartner from "@/components/TrustedPartner";
-import Testimonials from "@/components/Testimonials";
+// Hidden until there is a real testimonial to show — the section currently
+// holds placeholder copy. Restore by uncommenting both this and <Testimonials />
+// below; the component itself is untouched.
+// import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
   return (
@@ -9,7 +12,7 @@ export default function Home() {
       <Hero />
       <SchoolSolutions />
       <TrustedPartner />
-      <Testimonials />
+      {/* <Testimonials /> */}
     </main>
   );
 }
