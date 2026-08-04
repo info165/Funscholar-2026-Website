@@ -45,12 +45,21 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** All four fields are required; email additionally has to look like one. */
+/**
+ * Counts digits rather than matching a shape. People write numbers as
+ * +91 98765 43210, 098765-43210, or with a country code and extension, and a
+ * strict pattern rejects real numbers far more often than it catches typos.
+ */
+const isPhone = (value: string) => value.replace(/\D/g, "").length >= 10;
+
+/** Every field is required; email and phone additionally have to look plausible. */
 function validate(values: Record<string, string>) {
   const errors: Record<string, string> = {};
   if (!values.name?.trim()) errors.name = "Please enter your full name.";
   if (!values.email?.trim()) errors.email = "Please enter your email address.";
   else if (!EMAIL_RE.test(values.email.trim())) errors.email = "That doesn't look like a valid email.";
+  if (!values.phone?.trim()) errors.phone = "Please enter your phone number.";
+  else if (!isPhone(values.phone)) errors.phone = "Please enter a valid phone number.";
   if (!values.organization?.trim()) errors.organization = "Please enter your school or organization.";
   if (!values.message?.trim()) errors.message = "Please tell us how we can help.";
   return errors;
@@ -89,7 +98,9 @@ export default function ContactPage() {
     setFieldErrors((prev) => {
       if (!prev[name]) return prev;
       const stillInvalid =
-        !value.trim() || (name === "email" && !EMAIL_RE.test(value.trim()));
+        !value.trim() ||
+        (name === "email" && !EMAIL_RE.test(value.trim())) ||
+        (name === "phone" && !isPhone(value));
       if (stillInvalid) return prev;
       const next = { ...prev };
       delete next[name];
@@ -286,21 +297,42 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="organization" className={labelClass}>
-                      School / Organization <span className="text-[#ff6a1a]">*</span>
-                    </label>
-                    <input
-                      id="organization"
-                      name="organization"
-                      maxLength={190}
-                      onChange={clearWhenFixed}
-                      aria-invalid={!!fieldErrors.organization}
-                      aria-describedby={fieldErrors.organization ? "organization-error" : undefined}
-                      className={fieldClass(!!fieldErrors.organization)}
-                      placeholder="Institution name"
-                    />
-                    <FieldError id="organization-error" message={fieldErrors.organization} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label htmlFor="phone" className={labelClass}>
+                        Phone Number <span className="text-[#ff6a1a]">*</span>
+                      </label>
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        maxLength={30}
+                        onChange={clearWhenFixed}
+                        aria-invalid={!!fieldErrors.phone}
+                        aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+                        className={fieldClass(!!fieldErrors.phone)}
+                        placeholder="Your phone number"
+                      />
+                      <FieldError id="phone-error" message={fieldErrors.phone} />
+                    </div>
+                    <div>
+                      <label htmlFor="organization" className={labelClass}>
+                        School / Organization <span className="text-[#ff6a1a]">*</span>
+                      </label>
+                      <input
+                        id="organization"
+                        name="organization"
+                        maxLength={190}
+                        onChange={clearWhenFixed}
+                        aria-invalid={!!fieldErrors.organization}
+                        aria-describedby={fieldErrors.organization ? "organization-error" : undefined}
+                        className={fieldClass(!!fieldErrors.organization)}
+                        placeholder="Institution name"
+                      />
+                      <FieldError id="organization-error" message={fieldErrors.organization} />
+                    </div>
                   </div>
 
                   <div>

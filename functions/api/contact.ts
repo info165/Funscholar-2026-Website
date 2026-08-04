@@ -96,16 +96,22 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 
   const name = field(data.name, 120);
   const email = field(data.email, 190);
+  const phone = field(data.phone, 30);
   const organization = field(data.organization, 190);
   const message = field(data.message, 5000);
 
-  if (!name || !email || !organization || !message) {
+  if (!name || !email || !phone || !organization || !message) {
     return json({ ok: false, error: "All fields are required." }, 400);
   }
 
   // Deliberately loose — real addresses take shapes strict patterns reject.
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ ok: false, error: "Enter a valid email address." }, 400);
+  }
+
+  // Count digits rather than match a shape; written formats vary too much.
+  if (phone.replace(/\D/g, "").length < 10) {
+    return json({ ok: false, error: "Enter a valid phone number." }, 400);
   }
 
   if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) {
@@ -120,6 +126,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     <table style="font-family:sans-serif;font-size:15px;border-collapse:collapse">
       <tr><td style="padding:6px 16px 6px 0"><strong>Name</strong></td><td>${escapeHtml(name)}</td></tr>
       <tr><td style="padding:6px 16px 6px 0"><strong>Email</strong></td><td>${escapeHtml(email)}</td></tr>
+      <tr><td style="padding:6px 16px 6px 0"><strong>Phone</strong></td><td><a href="tel:${escapeHtml(phone.replace(/[^\d+]/g, ""))}">${escapeHtml(phone)}</a></td></tr>
       <tr><td style="padding:6px 16px 6px 0"><strong>Organisation</strong></td><td>${escapeHtml(organization)}</td></tr>
     </table>
     <p style="font-family:sans-serif;font-size:15px;margin:20px 0 6px"><strong>Message</strong></p>
