@@ -35,3 +35,6 @@ yarn-error.log*
 
 # wrangler local secrets — holds a real Resend API key
 .dev.vars
+
+# screenshot scratch folder
+/snap
