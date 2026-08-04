@@ -115,8 +115,12 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   }
 
   if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) {
-    console.error("[contact] RESEND_API_KEY or CONTACT_TO_EMAIL is not set");
-    return json({ ok: false, error: "Could not send your message. Please try again." }, 500);
+    // 503 rather than 500 so a missing-configuration failure can be told apart
+    // from an unexpected one without exposing which variable, or its value.
+    console.error(
+      `[contact] not configured — RESEND_API_KEY:${env.RESEND_API_KEY ? "set" : "MISSING"} CONTACT_TO_EMAIL:${env.CONTACT_TO_EMAIL ? "set" : "MISSING"}`,
+    );
+    return json({ ok: false, error: "Could not send your message. Please try again." }, 503);
   }
 
   const from = env.CONTACT_FROM_EMAIL ?? "Funscholar Website <onboarding@resend.dev>";
