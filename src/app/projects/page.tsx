@@ -36,7 +36,6 @@ const videos: Video[] = [
   {
     number: "02",
     title: "Ruby Park Public School",
-    desc: "Text Will be inserted",
     duration: "02:15",
     video: "/videos/ruby-park-public-school.mp4",
     // Shot portrait (720×1280).
@@ -45,14 +44,12 @@ const videos: Video[] = [
   {
     number: "03",
     title: "B.D.M International School",
-    desc: "Text Will be inserted",
     duration: "01:01",
     video: "/videos/bdmi.mp4",
   },
   {
     number: "04",
     title: "The Newtown School",
-    desc: "Text Will be inserted",
     duration: "00:14",
     video: "/videos/newtown-school.mp4",
     poster: "/images/newtown-school-thumbnail.jpg",
