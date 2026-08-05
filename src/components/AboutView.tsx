@@ -293,7 +293,7 @@ export default function AboutView() {
       <OurJourney />
 
       {/* The Funscholar promise */}
-      <section id="promise" className="relative scroll-mt-28 pb-14 lg:pb-16">
+      <section id="promise" className="relative scroll-mt-28 pt-10 lg:pt-16 pb-14 lg:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 26 }}

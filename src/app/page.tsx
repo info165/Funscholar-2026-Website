@@ -7,8 +7,9 @@ import TrustedPartner from "@/components/TrustedPartner";
 // import Testimonials from "@/components/Testimonials";
 
 export const metadata = {
-  title: "Funscholar — Experiential Learning, Robotics & AI for Schools",
-  description: "Funscholar - Transforming Education With Technology",
+  title: "Funscholar - Transforming Education With Technology",
+  description:
+    "Funscholar equips Indian schools with ATL and robotics labs, smart classrooms and experiential learning kits. 4,000+ schools across 22 states.",
 };
 
 export default function Home() {

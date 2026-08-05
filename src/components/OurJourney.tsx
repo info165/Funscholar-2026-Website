@@ -46,42 +46,56 @@ const milestones = [
     icon: School,
     tag: "2026",
     title: "4,000+ Schools Reached",
-    desc: "Crossed 4,000 schools served across the country.",
+    desc: "Reached over 4,000 schools nationwide, bringing our mission closer to students everywhere.",
   },
 ];
 
+/** Cards in the first row; the rest fall into the second. */
+const TOP_ROW = 3;
+
 /**
- * The connecting rail above each row of three: a hairline that draws itself
+ * The connecting rail above a row of cards: a hairline that draws itself
  * left-to-right, with a node lighting up over each card as it passes.
+ * `count` is how many cards sit in the row beneath, so the nodes land on
+ * their centres — the rows are not the same width.
  */
 function TimelineRail({
   inView,
   reduceMotion,
   delay,
   markLast,
+  count,
+  className = "",
 }: {
   inView: boolean;
   reduceMotion: boolean;
   delay: number;
   markLast: boolean;
+  count: number;
+  /** Spacing tweaks from the caller — the rail owns the gap above its row, so
+   *  nudging it moves the cards beneath it too. */
+  className?: string;
 }) {
+  // Half a column in from each edge, so the rail starts and ends under the
+  // outermost nodes rather than running the full width.
+  const inset = `${100 / (count * 2)}%`;
   const draw: Transition = reduceMotion
     ? { duration: 0 }
     : { duration: 1.2, delay, ease: [0.22, 1, 0.36, 1] };
 
   return (
-    <div className="hidden lg:block col-span-full relative h-7" aria-hidden>
+    <div className={`hidden lg:block col-span-full relative h-7 ${className}`} aria-hidden>
       {/* Rail runs between the first and last node, not edge to edge. */}
       <motion.div
         initial={{ scaleX: 0 }}
         animate={inView ? { scaleX: 1 } : {}}
         transition={draw}
-        style={{ left: "16.666%", right: "16.666%" }}
+        style={{ left: inset, right: inset }}
         className="absolute top-1/2 -translate-y-1/2 h-px origin-left bg-gradient-to-r from-[#ffd4ac] via-[#ff8c3a] to-[#ffd4ac]"
       />
 
-      {[0, 1, 2].map((n) => {
-        const isCurrent = markLast && n === 2;
+      {Array.from({ length: count }, (_, n) => n).map((n) => {
+        const isCurrent = markLast && n === count - 1;
         const nodeDelay = reduceMotion ? 0 : delay + 0.3 + n * 0.3;
         return (
           <motion.span
@@ -93,7 +107,7 @@ function TimelineRail({
                 ? { duration: 0 }
                 : { duration: 0.45, delay: nodeDelay, ease: [0.22, 1, 0.36, 1] }
             }
-            style={{ left: `${(n + 0.5) * (100 / 3)}%` }}
+            style={{ left: `${(n + 0.5) * (100 / count)}%` }}
             className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
           >
             <span
@@ -157,20 +171,17 @@ export default function OurJourney() {
           </h2>
         </motion.div>
 
-        {/* Milestone cards — three across so each has room to breathe; six in a
-            single row forced every title and description to wrap repeatedly.
-            The rails are col-span-full grid items, so they force a row break at
-            lg and drop out of the flow entirely below it. */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+        {/* Milestone cards, laid out 3 over 4. A twelve-column track is what
+            makes both rows fill exactly: three cards at four columns each, then
+            four at three each. The rails are col-span-full grid items, so they
+            force the row break at lg and drop out of the flow below it. */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-6">
           {milestones.map((m, i) => {
             const isLast = i === milestones.length - 1;
             const Icon = m.icon;
-            const startsRow = i % 3 === 0;
-            // A final row holding a single card sits hard against the left edge
-            // with two empty columns beside it. Let it run the full width
-            // instead — it is the highlighted milestone, so a wide banner reads
-            // as deliberate rather than left over.
-            const isOrphan = isLast && milestones.length % 3 === 1;
+            // Row one holds the first three; row two takes the rest.
+            const inTopRow = i < TOP_ROW;
+            const startsRow = i === 0 || i === TOP_ROW;
             return (
               <Fragment key={m.title}>
                 {startsRow && (
@@ -179,6 +190,8 @@ export default function OurJourney() {
                     reduceMotion={!!reduceMotion}
                     delay={i === 0 ? 0.15 : 0.5}
                     markLast={i !== 0}
+                    count={i === 0 ? TOP_ROW : milestones.length - TOP_ROW}
+                    className={i === 0 ? "" : "lg:mt-3"}
                   />
                 )}
                 <motion.div
@@ -187,9 +200,12 @@ export default function OurJourney() {
                 transition={{ duration: 0.8, delay: 0.15 + i * 0.09, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -8 }}
                 className={`group relative flex flex-col items-center text-center p-6 lg:p-7 rounded-[1.5rem] overflow-hidden transition-shadow duration-500 ${
-                  isOrphan
-                    ? "sm:col-span-2 lg:col-span-3 sm:flex-row sm:items-center sm:justify-center sm:text-left sm:gap-9 lg:gap-12 sm:py-9"
-                    : ""
+                  inTopRow ? "lg:col-span-4" : "lg:col-span-3"
+                } ${
+                  // Seven cards in two columns leaves the last one alone at the
+                  // tablet size; let it take the full width there. lg is
+                  // already set above.
+                  isLast ? "sm:col-span-2" : ""
                 } ${
                   isLast
                     ? "bg-gradient-to-br from-[#ffb066] via-[#ff8c3a] to-[#e8530a] shadow-lift-3 hover:shadow-[0_38px_78px_-18px_rgba(232,83,10,0.7)]"
@@ -230,9 +246,7 @@ export default function OurJourney() {
                 </span>
 
                 <div
-                  className={`relative w-[3.6rem] h-[3.6rem] shrink-0 rounded-[1.15rem] flex items-center justify-center transition-all duration-500 group-hover:scale-[1.08] group-hover:-rotate-3 ${
-                    isOrphan ? "mb-5 sm:mb-0" : "mb-5"
-                  } ${
+                  className={`relative w-[3.6rem] h-[3.6rem] shrink-0 rounded-[1.15rem] flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-[1.08] group-hover:-rotate-3 ${
                     isLast
                       ? "bg-white/[0.18] backdrop-blur-sm ring-1 ring-inset ring-white/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]"
                       : "bg-gradient-to-br from-[#fff4ea] to-[#ffdcb2] ring-1 ring-inset ring-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.95),0_10px_24px_-10px_rgba(255,106,26,0.45)]"
@@ -248,16 +262,6 @@ export default function OurJourney() {
                   <Icon className={`relative w-6 h-6 ${isLast ? "text-white" : "text-[#ff6a1a]"}`} strokeWidth={1.6} />
                 </div>
 
-                {/* Grouped so the wide card can put the text beside the icon.
-                    `contents` dissolves the wrapper on every other card, so
-                    their stacked layout is unchanged. */}
-                <div
-                  className={
-                    isOrphan
-                      ? "relative flex flex-col items-center sm:items-start"
-                      : "contents"
-                  }
-                >
                 <span
                   className={`relative text-[0.72rem] font-bold tracking-[0.22em] uppercase ${
                     isLast ? "text-white/90" : "text-[#ff6a1a]"
@@ -283,13 +287,12 @@ export default function OurJourney() {
                 />
 
                 <p
-                  className={`relative text-[0.875rem] leading-relaxed ${
-                    isOrphan ? "max-w-[26ch] sm:max-w-[42ch]" : "max-w-[26ch]"
-                  } ${isLast ? "text-white/90" : "text-[#6b6b6b]"}`}
+                  className={`relative text-[0.875rem] leading-relaxed max-w-[26ch] ${
+                    isLast ? "text-white/90" : "text-[#6b6b6b]"
+                  }`}
                 >
                   {m.desc}
                 </p>
-                </div>
                 </motion.div>
               </Fragment>
             );
