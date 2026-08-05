@@ -148,7 +148,7 @@ export default function AboutPage() {
       </section>
 
       {/* Vision / Mission / Values */}
-      <section className="relative pt-10 lg:pt-16 pb-8 lg:pb-12">
+      <section className="relative pt-15 lg:pt-[5.5rem] pb-8 lg:pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
