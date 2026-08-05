@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import BlurImage from "@/components/BlurImage";
-import { Clock, ArrowRight, Lightbulb, ImageIcon } from "lucide-react";
+import { Clock, ArrowRight, ImageIcon } from "lucide-react";
 
 export type BlogCard = {
   id: number;
@@ -17,12 +16,15 @@ export type BlogCard = {
 export default function BlogsView({ posts }: { posts: BlogCard[] }) {
   return (
     <main className="bg-[#fdfaf7]">
-      {/* Hero */}
-      {/* overflow-x-clip (not overflow-hidden) so the decorative frames still
-          clip sideways while the floating badge can overhang the top edge.
-          Extra top padding keeps that overhang clear of the fixed header. */}
-      <section className="relative pt-[8.5rem] lg:pt-[9rem] pb-12 lg:pb-16 overflow-x-clip">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-14 items-center">
+      {/* Hero — cutouts layered directly on the page rather than inside a
+          frame, so the subject reads as part of the composition. overflow-x-clip
+          lets the neural head overhang the right edge without adding a
+          horizontal scrollbar. */}
+      <section className="relative pt-[7.5rem] lg:pt-[8rem] pb-10 lg:pb-14 overflow-x-clip">
+        {/* Warm ambient light behind the visual so the white doesn't read flat */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[46rem] h-[34rem] rounded-full bg-[#ff6a1a]/[0.05] blur-[130px] pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-6 grid lg:grid-cols-[0.82fr_1.18fr] gap-10 lg:gap-6 items-center">
           <motion.div
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
@@ -40,48 +42,41 @@ export default function BlogsView({ posts }: { posts: BlogCard[] }) {
               Exploring the ideas, innovations, and inspiration shaping the
               future of education, AI, and robotics.
             </p>
-          </motion.div>
 
-          {/* Robot visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative"
-          >
-            {/* decorative outline frames */}
-            <div className="absolute -left-4 top-1/3 w-24 h-40 rounded-2xl border-2 border-[#ff6a1a]/40 pointer-events-none hidden sm:block" />
-            <div className="absolute -right-3 top-16 w-24 h-44 rounded-2xl border-2 border-[#ff6a1a]/30 pointer-events-none hidden sm:block" />
-            {/* dot field */}
+            {/* Dot field, masked so it dissolves rather than stopping on a
+                hard edge. */}
             <div
-              className="absolute -top-3 -right-6 w-28 h-20 opacity-40 pointer-events-none hidden sm:block"
+              className="mt-11 lg:mt-14 w-44 h-16 pointer-events-none hidden sm:block"
               style={{
-                backgroundImage: "radial-gradient(circle, #ff6a1a 1.5px, transparent 1.5px)",
-                backgroundSize: "13px 13px",
+                backgroundImage: "radial-gradient(circle, #ff6a1a 1.4px, transparent 1.4px)",
+                backgroundSize: "16px 16px",
+                opacity: 0.45,
+                maskImage: "linear-gradient(115deg, black, transparent 85%)",
+                WebkitMaskImage: "linear-gradient(115deg, black, transparent 85%)",
               }}
             />
+          </motion.div>
 
-            <BlurImage
-              src="/images/blogs-hero-robot.jpg"
-              alt="Humanoid robot beside a neural-network data display"
-              width={1200}
-              height={800}
-              className="relative w-full aspect-[4/3] rounded-[1.75rem] shadow-elev-4"
-            />
-
-            {/* floating badge */}
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-4 right-3 sm:right-6 z-10 w-40 rounded-[1.25rem] bg-gradient-to-br from-[#ff8a3a] to-[#ef5a06] p-4 shadow-[0_22px_45px_-18px_rgba(239,90,6,0.75)]"
-            >
-              <span className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center mb-3">
-                <Lightbulb className="w-[1.1rem] h-[1.1rem] text-white" strokeWidth={1.75} />
-              </span>
-              <p className="text-white font-semibold text-sm leading-snug">
-                Thoughts that spark progress.
-              </p>
-            </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.95, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            className="relative"
+          >
+            {/* Aspect-ratio box so the cutout keeps its proportions at any
+                width, sized by width and overhanging right. */}
+            <div className="relative w-full aspect-[4/3]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/blogs-hero-mind.webp"
+                alt="Translucent human head with a glowing neural network"
+                /* Width is capped so the image's own height stays inside the
+                   4/3 box — beyond about 110% it grows taller than the
+                   container and the head gets clipped top and bottom. Pulled
+                   left to close the gap the robot used to fill. */
+                className="absolute top-[47%] -translate-y-1/2 left-[-2%] w-[102%] max-w-none select-none pointer-events-none"
+              />
+            </div>
           </motion.div>
         </div>
       </section>

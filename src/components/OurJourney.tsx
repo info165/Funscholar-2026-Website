@@ -131,8 +131,12 @@ export default function OurJourney() {
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
-          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+          // No blur here. A CSS filter rasterises the subtree separately, and
+          // the gradient heading below uses background-clip:text — inside a
+          // filtered layer that clips glyphs which overrun their box, which
+          // beheaded the descender on Fraunces' italic capital J.
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="text-center max-w-2xl mx-auto mb-14 lg:mb-16"
         >
