@@ -1,19 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Clock, ArrowRight, ImageIcon } from "lucide-react";
+import type { Post } from "@/lib/posts";
 
-export type BlogCard = {
-  id: number;
-  title: string;
-  category: string;
-  excerpt: string;
-  readTime: string;
-  /** Resolved on the server: a /public path, an API blob URL, or null. */
-  thumbnail: string | null;
-};
-
-export default function BlogsView({ posts }: { posts: BlogCard[] }) {
+export default function BlogsView({ posts }: { posts: Post[] }) {
   return (
     <main className="bg-[#fdfaf7]">
       {/* Hero — cutouts layered directly on the page rather than inside a
@@ -86,20 +78,28 @@ export default function BlogsView({ posts }: { posts: BlogCard[] }) {
         <div className="max-w-7xl mx-auto px-6">
           {posts.length === 0 ? (
             <p className="text-center text-[#8a8a8a] py-16">
-              No posts published yet — add a row to the <code>blogs</code> table to see it here.
+              No posts published yet — add an entry to <code>src/lib/posts.ts</code> to see it here.
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
               {posts.map((p, i) => (
                 <motion.article
-                  key={p.id}
+                  key={p.slug}
                   initial={{ opacity: 0, y: 26 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   whileHover={{ y: -5 }}
-                  className="group flex flex-col rounded-[1.5rem] overflow-hidden bg-white border border-black/[0.05] shadow-elev-2 hover:shadow-lift-2 transition-shadow duration-500 cursor-pointer"
+                  className="group relative flex flex-col rounded-[1.5rem] overflow-hidden bg-white border border-black/[0.05] shadow-elev-2 hover:shadow-lift-2 transition-shadow duration-500"
                 >
+                  {/* The whole card is the link. Stretched over the article
+                      rather than wrapping it, so the card keeps its layout and
+                      the accessible name still comes from the title. */}
+                  <Link
+                    href={`/blogs/${p.slug}`}
+                    className="absolute inset-0 z-20"
+                    aria-label={p.title}
+                  />
                   <div className="relative aspect-[16/10] bg-gradient-to-br from-[#fff3e8] to-[#ffdfc4] overflow-hidden">
                     {p.thumbnail ? (
                       /* eslint-disable-next-line @next/next/no-img-element */

@@ -18,6 +18,11 @@ type Video = {
   /** Poster already carries the school name, so no text overlay is drawn. */
   brandedPoster?: boolean;
   /**
+   * Suppresses the duration pill. Some branded stills carry their own artwork
+   * in the lower-left corner, which the pill would sit on top of.
+   */
+  hideDuration?: boolean;
+  /**
    * Source isn't 16:9, so it's fitted inside the frame with a blurred copy of
    * itself filling the gaps rather than being cropped.
    */
@@ -36,9 +41,13 @@ const videos: Video[] = [
   {
     number: "02",
     title: "Ruby Park Public School",
-    duration: "02:15",
+    duration: "0:33",
     video: "/videos/ruby-park-public-school.mp4",
-    // Shot portrait (720×1280).
+    poster: "/images/ruby-park-public-school-thumbnail.jpg",
+    brandedPoster: true,
+    hideDuration: true,
+    // Shot portrait (640×1138). The poster is 16:9, and letterbox only affects
+    // playback — so the still fills the frame while the clip is fitted inside.
     letterbox: true,
   },
   {
@@ -46,6 +55,9 @@ const videos: Video[] = [
     title: "B.D.M International School",
     duration: "01:01",
     video: "/videos/bdmi.mp4",
+    poster: "/images/bdmi-thumbnail.jpg",
+    brandedPoster: true,
+    hideDuration: true,
   },
   {
     number: "04",
@@ -380,7 +392,7 @@ function VideoMedia({
             </div>
           )}
 
-          {v.brandedPoster && (
+          {v.brandedPoster && !v.hideDuration && (
             <span className="absolute bottom-5 left-6 flex items-center gap-2 text-sm px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/10">
               <span className="text-[#ff6a1a] font-bold">{v.duration}</span>
               <span className="text-white/80">Watch</span>
