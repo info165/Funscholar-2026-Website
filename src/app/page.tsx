@@ -6,6 +6,11 @@ import TrustedPartner from "@/components/TrustedPartner";
 // below; the component itself is untouched.
 // import Testimonials from "@/components/Testimonials";
 
+export const metadata = {
+  title: "Funscholar — Experiential Learning, Robotics & AI for Schools",
+  description: "Funscholar - Transforming Education With Technology",
+};
+
 export default function Home() {
   return (
     <main className="relative">
