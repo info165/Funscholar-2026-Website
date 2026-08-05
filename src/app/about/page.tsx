@@ -8,7 +8,10 @@ import {
   Eye,
   Flag,
   Gem,
-  CheckCircle2,
+  Lightbulb,
+  ShieldCheck,
+  Target,
+  Brain,
   FlaskConical,
   Building2,
   BookOpen,
@@ -17,7 +20,61 @@ import {
   IndianRupee,
 } from "lucide-react";
 
-const values = ["Innovation", "Integrity", "Impact", "Intelligence"];
+const values = [
+  { label: "Innovation", icon: Lightbulb },
+  { label: "Integrity", icon: ShieldCheck },
+  { label: "Impact", icon: Target },
+  { label: "Intelligence", icon: Brain },
+];
+
+/**
+ * Contour lines fanning up from the bottom-left of the vision card.
+ * Drawn rather than an image so it stays crisp and costs no request.
+ */
+function ContourLines() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 420 200"
+      className="absolute bottom-0 left-0 w-full h-[52%] pointer-events-none"
+      fill="none"
+    >
+      {Array.from({ length: 12 }).map((_, i) => (
+        <path
+          key={i}
+          d={`M-20 ${194 - i * 3} C 90 ${194 - i * 3} 150 ${152 - i * 7} 230 ${112 - i * 7} S 350 ${52 - i * 7} 440 ${22 - i * 7}`}
+          stroke="#ff6a1a"
+          strokeOpacity={0.3 - i * 0.021}
+          strokeWidth="1.1"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/** Concentric rings, bottom-right of the mission card. */
+function Ripples() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 240 240"
+      className="absolute -bottom-12 -right-12 w-[72%] h-auto pointer-events-none"
+      fill="none"
+    >
+      {[112, 94, 76, 58, 40, 24].map((r, i) => (
+        <circle
+          key={r}
+          cx="120"
+          cy="120"
+          r={r}
+          stroke="#ff6a1a"
+          strokeOpacity={0.06 + i * 0.022}
+          strokeWidth="1.1"
+        />
+      ))}
+    </svg>
+  );
+}
 
 // Figures taken from the live funscholar.com "A Trusted Partner in Large-Scale
 // Education Transformation" section. Only the content-hours and orders figures
@@ -91,66 +148,144 @@ export default function AboutPage() {
       </section>
 
       {/* Vision / Mission / Values */}
-      <section className="relative pt-8 lg:pt-12 pb-6 lg:pb-8">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-          {[
-            {
-              icon: Eye,
-              label: "Our Vision",
-              body: (
-                <p className="font-display text-xl lg:text-[1.4rem] font-semibold leading-snug text-[#0a0a0a]">
-                  To make every Indian classroom a place where technology is
-                  built, not just taught.
-                </p>
-              ),
-            },
-            {
-              icon: Flag,
-              label: "Our Mission",
-              body: (
-                <p className="font-display text-xl lg:text-[1.4rem] font-semibold leading-snug text-[#0a0a0a]">
-                  To bring AI and robotics within reach of every school, through
-                  immersive labs, empowered teachers, and a curriculum built for
-                  genuine understanding.
-                </p>
-              ),
-            },
-            {
-              icon: Gem,
-              label: "Our Values",
-              body: (
-                <ul className="space-y-3">
-                  {values.map((v) => (
-                    <li key={v} className="flex items-center gap-2.5 text-[#0a0a0a] text-base lg:text-lg">
-                      <CheckCircle2 className="w-5 h-5 text-[#ff6a1a] shrink-0" strokeWidth={2} />
-                      {v}
-                    </li>
-                  ))}
-                </ul>
-              ),
-            },
-          ].map((c, i) => {
-            const Icon = c.icon;
-            return (
-              <motion.div
-                key={c.label}
-                initial={{ opacity: 0, y: 26 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -5 }}
-                className="rounded-[1.5rem] bg-white border border-black/[0.05] shadow-elev-2 hover:shadow-lift-2 transition-shadow duration-500 p-7 lg:p-8"
-              >
-                <span className="w-14 h-14 rounded-full bg-[#fff1e6] flex items-center justify-center mb-6">
-                  <Icon className="w-6 h-6 text-[#ff6a1a]" strokeWidth={1.75} />
+      <section className="relative pt-10 lg:pt-16 pb-8 lg:pb-12">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-70px" }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center max-w-3xl mx-auto mb-11 lg:mb-14"
+          >
+            {/* Same treatment as the page's other headings: General Sans for
+                the roman words, Fraunces italic on the gradient for the accent.
+                The top padding keeps the italic ascenders inside the gradient's
+                paint box.
+
+                Each accent is paired with its full stop inside a nowrap span:
+                an inline-block creates a line-break opportunity after it, and
+                without this the browser strands the full stop on the next
+                line. */}
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-[3.1rem] font-bold tracking-[-0.035em] leading-[1.12] text-[#0a0a0a]">
+              Our{" "}
+              <span className="whitespace-nowrap">
+                <span className="italic font-serif font-light text-gradient-orange inline-block pt-[0.14em]">
+                  Mission
                 </span>
-                <span className="block text-[0.7rem] font-bold tracking-[0.16em] uppercase text-[#ff6a1a] mb-4">
-                  {c.label}
+                .
+              </span>{" "}
+              Our{" "}
+              <span className="whitespace-nowrap">
+                <span className="italic font-serif font-light text-gradient-orange inline-block pt-[0.14em]">
+                  Vision
                 </span>
-                {c.body}
-              </motion.div>
-            );
-          })}
+                .
+              </span>
+              <br />
+              Our{" "}
+              <span className="whitespace-nowrap">
+                <span className="italic font-serif font-light text-gradient-orange inline-block pt-[0.14em]">
+                  Values
+                </span>
+                .
+              </span>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+            {[
+              {
+                icon: Flag,
+                label: "Our Mission",
+                title: ["Empowering Schools,", "Inspiring Minds"],
+                body: "To bring AI and robotics within reach of every school, through immersive labs, empowered teachers, and a curriculum built for genuine understanding.",
+                decoration: <Ripples />,
+              },
+              {
+                icon: Eye,
+                label: "Our Vision",
+                title: ["Building the Future", "of Classrooms"],
+                body: "To make every Indian classroom a place where technology is built, not just taught.",
+                decoration: <ContourLines />,
+              },
+              {
+                icon: Gem,
+                label: "Our Values",
+                title: ["The Principles", "That Drive Us"],
+                decoration: null,
+              },
+            ].map((c, i) => {
+              const Icon = c.icon;
+              return (
+                <motion.div
+                  key={c.label}
+                  initial={{ opacity: 0, y: 26 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -5 }}
+                  className="group relative h-full overflow-hidden rounded-[1.75rem] bg-white border border-[#ff6a1a]/45 hover:border-[#ff6a1a]/70 shadow-elev-2 hover:shadow-lift-2 transition-all duration-500 p-7 lg:p-9"
+                >
+                  {c.decoration}
+
+                  {/* Above the decoration, which bleeds to the card edges. */}
+                  <div className="relative">
+                    {/* Floating plate rather than a filled tint, so the icon
+                        reads as an object sitting on the card. */}
+                    <span className="w-[3.9rem] h-[3.9rem] rounded-full bg-white ring-1 ring-black/[0.04] shadow-[0_12px_28px_-12px_rgba(0,0,0,0.22)] flex items-center justify-center mb-7">
+                      <Icon className="w-[1.4rem] h-[1.4rem] text-[#ff6a1a]" strokeWidth={1.75} />
+                    </span>
+
+                    <span className="block text-[0.7rem] font-bold tracking-[0.16em] uppercase text-[#ff6a1a] mb-3">
+                      {c.label}
+                    </span>
+
+                    {/* Two lines' height always reserved, so a title that wraps
+                        differently can't push this card's rule and body out of
+                        line with the other two. */}
+                    <h3 className="font-display text-[1.3rem] lg:text-[1.45rem] font-bold tracking-[-0.022em] leading-snug text-[#0a0a0a] min-h-[2.75em]">
+                      {c.title.map((line) => (
+                        <span key={line} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </h3>
+
+                    {/* Rendered for every card, not just the ones with body
+                        copy, so the rule lands at the same height across all
+                        three. */}
+                    <span className="block w-9 h-[3px] rounded-full bg-[#ff6a1a] my-5" />
+
+                    {c.body ? (
+                      <p className="text-[#6b6b6b] text-[0.95rem] leading-relaxed">{c.body}</p>
+                    ) : (
+                      <ul>
+                        {values.map((v, idx) => {
+                          const VIcon = v.icon;
+                          return (
+                            <li key={v.label} className="flex items-center gap-3.5">
+                              <span className="w-9 h-9 shrink-0 rounded-full border border-[#ff6a1a]/35 flex items-center justify-center">
+                                <VIcon className="w-4 h-4 text-[#ff6a1a]" strokeWidth={1.9} />
+                              </span>
+                              {/* Rule sits on the label, not the row, so it
+                                  starts after the icon as in the design. */}
+                              <span
+                                className={`flex-1 py-3.5 text-[#0a0a0a] text-[0.95rem] ${
+                                  idx > 0 ? "border-t border-black/[0.07]" : ""
+                                }`}
+                              >
+                                {v.label}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -180,7 +315,7 @@ export default function AboutPage() {
                 We don&apos;t just teach.
                 <br />
                 We{" "}
-                <span className="italic font-serif font-light text-gradient-orange inline-block pt-[0.14em] pb-[0.2em] -mb-[0.2em]">
+                <span className="italic font-serif font-light text-gradient-orange inline-block pt-[0.14em]">
                   inspire.
                 </span>
               </h2>
