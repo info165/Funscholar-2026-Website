@@ -105,7 +105,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Banner */}
         <div className="max-w-5xl mx-auto px-6">
-          <div className="relative aspect-[21/9] rounded-[1.75rem] overflow-hidden bg-gradient-to-br from-[#fff3e8] to-[#ffdfc4] border border-black/[0.05] shadow-elev-3">
+          {/* 16/9 matches the source images almost exactly. At 21/9 the frame
+              was cropping about a quarter of each one's height away. */}
+          <div className="relative aspect-[16/9] rounded-[1.75rem] overflow-hidden bg-gradient-to-br from-[#fff3e8] to-[#ffdfc4] border border-black/[0.05] shadow-elev-3">
             {post.thumbnail ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img

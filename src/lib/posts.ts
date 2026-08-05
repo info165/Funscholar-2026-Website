@@ -41,7 +41,7 @@ export const posts: Post[] = [
     readTime: "5 min read",
     date: "28 July 2026",
     author: "Funscholar Team",
-    thumbnail: null,
+    thumbnail: "/images/blogs/experiments-that-changed-how-kids-see-science.jpg",
     content: [
       {
         type: "p",
@@ -94,7 +94,7 @@ export const posts: Post[] = [
     readTime: "8 min read",
     date: "12 July 2026",
     author: "Funscholar Team",
-    thumbnail: null,
+    thumbnail: "/images/blogs/funscholar-ai-personalised-learning-at-scale.jpg",
     content: [
       {
         type: "p",
@@ -147,7 +147,7 @@ export const posts: Post[] = [
     readTime: "6 min read",
     date: "30 June 2026",
     author: "Funscholar Team",
-    thumbnail: null,
+    thumbnail: "/images/blogs/why-every-indian-school-needs-robotics-by-2026.jpg",
     content: [
       {
         type: "p",

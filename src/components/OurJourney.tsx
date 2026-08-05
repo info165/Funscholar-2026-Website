@@ -2,7 +2,7 @@
 
 import { motion, useInView, useReducedMotion, type Transition } from "framer-motion";
 import { Fragment, useRef } from "react";
-import { Rocket, Handshake, Trophy, TrendingUp, Globe, Brain } from "lucide-react";
+import { Rocket, Handshake, Trophy, TrendingUp, Globe, Brain, School } from "lucide-react";
 
 // Real milestones from funscholar.com's live "Our Journey" section.
 const milestones = [
@@ -41,6 +41,12 @@ const milestones = [
     tag: "2025",
     title: "AI Platform Launch",
     desc: "Launched AI-powered teaching and assessment platform.",
+  },
+  {
+    icon: School,
+    tag: "2026",
+    title: "4,000+ Schools Reached",
+    desc: "Crossed 4,000 schools served across the country.",
   },
 ];
 
@@ -160,6 +166,11 @@ export default function OurJourney() {
             const isLast = i === milestones.length - 1;
             const Icon = m.icon;
             const startsRow = i % 3 === 0;
+            // A final row holding a single card sits hard against the left edge
+            // with two empty columns beside it. Let it run the full width
+            // instead — it is the highlighted milestone, so a wide banner reads
+            // as deliberate rather than left over.
+            const isOrphan = isLast && milestones.length % 3 === 1;
             return (
               <Fragment key={m.title}>
                 {startsRow && (
@@ -176,6 +187,10 @@ export default function OurJourney() {
                 transition={{ duration: 0.8, delay: 0.15 + i * 0.09, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -8 }}
                 className={`group relative flex flex-col items-center text-center p-6 lg:p-7 rounded-[1.5rem] overflow-hidden transition-shadow duration-500 ${
+                  isOrphan
+                    ? "sm:col-span-2 lg:col-span-3 sm:flex-row sm:items-center sm:justify-center sm:text-left sm:gap-9 lg:gap-12 sm:py-9"
+                    : ""
+                } ${
                   isLast
                     ? "bg-gradient-to-br from-[#ffb066] via-[#ff8c3a] to-[#e8530a] shadow-lift-3 hover:shadow-[0_38px_78px_-18px_rgba(232,83,10,0.7)]"
                     : "bg-gradient-to-b from-white to-[#fffaf4] shadow-elev-2 hover:shadow-lift-2"
@@ -215,7 +230,9 @@ export default function OurJourney() {
                 </span>
 
                 <div
-                  className={`relative w-[3.6rem] h-[3.6rem] rounded-[1.15rem] flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-[1.08] group-hover:-rotate-3 ${
+                  className={`relative w-[3.6rem] h-[3.6rem] shrink-0 rounded-[1.15rem] flex items-center justify-center transition-all duration-500 group-hover:scale-[1.08] group-hover:-rotate-3 ${
+                    isOrphan ? "mb-5 sm:mb-0" : "mb-5"
+                  } ${
                     isLast
                       ? "bg-white/[0.18] backdrop-blur-sm ring-1 ring-inset ring-white/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]"
                       : "bg-gradient-to-br from-[#fff4ea] to-[#ffdcb2] ring-1 ring-inset ring-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.95),0_10px_24px_-10px_rgba(255,106,26,0.45)]"
@@ -231,6 +248,16 @@ export default function OurJourney() {
                   <Icon className={`relative w-6 h-6 ${isLast ? "text-white" : "text-[#ff6a1a]"}`} strokeWidth={1.6} />
                 </div>
 
+                {/* Grouped so the wide card can put the text beside the icon.
+                    `contents` dissolves the wrapper on every other card, so
+                    their stacked layout is unchanged. */}
+                <div
+                  className={
+                    isOrphan
+                      ? "relative flex flex-col items-center sm:items-start"
+                      : "contents"
+                  }
+                >
                 <span
                   className={`relative text-[0.72rem] font-bold tracking-[0.22em] uppercase ${
                     isLast ? "text-white/90" : "text-[#ff6a1a]"
@@ -256,12 +283,13 @@ export default function OurJourney() {
                 />
 
                 <p
-                  className={`relative text-[0.875rem] leading-relaxed max-w-[26ch] ${
-                    isLast ? "text-white/90" : "text-[#6b6b6b]"
-                  }`}
+                  className={`relative text-[0.875rem] leading-relaxed ${
+                    isOrphan ? "max-w-[26ch] sm:max-w-[42ch]" : "max-w-[26ch]"
+                  } ${isLast ? "text-white/90" : "text-[#6b6b6b]"}`}
                 >
                   {m.desc}
                 </p>
+                </div>
                 </motion.div>
               </Fragment>
             );
