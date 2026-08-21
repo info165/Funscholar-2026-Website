@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   ArrowUp,
+  Download,
 } from "lucide-react";
 
 const quickLinks = [
@@ -279,6 +280,23 @@ export default function Footer() {
                     </Link>
                   </li>
                 ))}
+                {/* A plain anchor, not next/link — the PDF is a file, not a
+                    route, so it opens in a new tab rather than being handed to
+                    the client router. */}
+                <li>
+                  <a
+                    href="/funscholar-brochure.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/dl inline-flex items-center gap-2 text-[0.95rem] text-white/55 hover:text-white transition-all duration-300 hover:translate-x-1"
+                  >
+                    Company Brochure
+                    <Download
+                      className="w-3.5 h-3.5 text-[#ff6a1a] transition-transform duration-300 group-hover/dl:translate-y-0.5"
+                      strokeWidth={2}
+                    />
+                  </a>
+                </li>
               </ul>
             </motion.div>
 

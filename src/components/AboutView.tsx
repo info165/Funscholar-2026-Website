@@ -18,6 +18,9 @@ import {
   Bot,
   MapPin,
   IndianRupee,
+  FileText,
+  Download,
+  ArrowRight,
 } from "lucide-react";
 
 const values = [
@@ -356,6 +359,52 @@ export default function AboutView() {
               </div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Company brochure */}
+      <section className="relative pb-16 lg:pb-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.a
+            href="/funscholar-brochure.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 26 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-70px" }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: -4 }}
+            className="group relative flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 overflow-hidden rounded-[1.75rem] bg-white border border-[#ff6a1a]/25 hover:border-[#ff6a1a]/50 shadow-elev-2 hover:shadow-lift-2 transition-all duration-500 p-7 lg:p-9"
+          >
+            {/* Warm bloom that lifts in on hover */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-20 -right-20 w-56 h-56 rounded-full bg-[#ff6a1a]/[0.12] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            />
+
+            <span className="relative w-[3.9rem] h-[3.9rem] shrink-0 rounded-[1.15rem] bg-gradient-to-br from-[#fff4ea] to-[#ffdcb2] ring-1 ring-inset ring-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.95),0_10px_24px_-10px_rgba(255,106,26,0.45)] flex items-center justify-center transition-transform duration-500 group-hover:scale-[1.06] group-hover:-rotate-3">
+              <FileText className="w-[1.4rem] h-[1.4rem] text-[#ff6a1a]" strokeWidth={1.7} />
+            </span>
+
+            <div className="relative flex-1 min-w-0">
+              <span className="block text-[0.7rem] font-bold tracking-[0.16em] uppercase text-[#ff6a1a] mb-2">
+                Company Brochure
+              </span>
+              <h2 className="font-display text-[1.3rem] lg:text-[1.55rem] font-bold tracking-[-0.022em] leading-snug text-[#0a0a0a]">
+                Everything we do, in one place.
+              </h2>
+              <p className="mt-2.5 text-[#6b6b6b] text-[0.95rem] leading-relaxed max-w-md">
+                Our labs, programmes and classroom solutions — set out in full for
+                school leaders and decision makers.
+              </p>
+            </div>
+
+            <span className="relative shrink-0 inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#ff7a24] to-[#f25c07] text-white font-semibold text-[0.95rem] shadow-lift-3 group-hover:shadow-[0_22px_46px_-16px_rgba(242,92,7,0.9)] transition-shadow duration-500">
+              <Download className="w-[1.05rem] h-[1.05rem]" strokeWidth={2} />
+              Download
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </span>
+          </motion.a>
         </div>
       </section>
 
