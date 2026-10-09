@@ -8,6 +8,7 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/about", label: "About Us" },
+  { href: "/our-events", label: "Our Events" },
   { href: "/projects", label: "Our Works" },
   { href: "/blogs", label: "Blogs" },
   { href: "/contact", label: "Contact Us" },
@@ -38,9 +39,11 @@ export default function Header() {
     setOpen(false);
   }
 
-  // Inner pages have a light hero background, so the header must stay solid there;
-  // only the homepage has a full-bleed dark hero image to justify a transparent header.
-  const solid = scrolled || pathname !== "/";
+  // Most inner pages have a light hero background, so the header must stay solid
+  // there; only pages with a full-bleed dark hero can carry a transparent header.
+  const darkHeroRoutes = ["/", "/our-events"];
+  const route = pathname.replace(/\/+$/, "") || "/";
+  const solid = scrolled || !darkHeroRoutes.includes(route);
 
   return (
     <>
